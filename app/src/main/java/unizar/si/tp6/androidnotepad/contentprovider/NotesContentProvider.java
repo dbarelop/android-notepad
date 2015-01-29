@@ -11,6 +11,8 @@ import android.net.Uri;
 import android.text.TextUtils;
 
 
+import org.apache.http.auth.AUTH;
+
 import java.util.Arrays;
 import java.util.HashSet;
 
@@ -23,6 +25,7 @@ import unizar.si.tp6.androidnotepad.db.NotesTable;
 public class NotesContentProvider extends ContentProvider {
     private static final int NOTES = 10;
     private static final int NOTE_ID = 20;
+    private static final int CATEGORY = 30;
     private static final String AUTHORITY = "unizar.si.tp6.androidnotepad.contentprovider";
     private static final String BASE_PATH = "notes";
     public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + BASE_PATH);
@@ -32,6 +35,7 @@ public class NotesContentProvider extends ContentProvider {
     static {
         sURIMatcher.addURI(AUTHORITY, BASE_PATH, NOTES);
         sURIMatcher.addURI(AUTHORITY, BASE_PATH + "/#", NOTE_ID);
+        sURIMatcher.addURI(AUTHORITY, BASE_PATH + "/CATEGORY", CATEGORY);
     }
 
     private NotesDatabaseHelper database;
@@ -48,17 +52,21 @@ public class NotesContentProvider extends ContentProvider {
         checkColumns(projection);
         queryBuilder.setTables(NotesTable.TABLE_NOTES);
         int uriType = sURIMatcher.match(uri);
+        String groupBy = null;
         switch(uriType) {
             case NOTES:
                 break;
             case NOTE_ID:
                 queryBuilder.appendWhere(NotesTable.COLUMN_ID + " = " + uri.getLastPathSegment());
                 break;
+            case CATEGORY:
+                groupBy = NotesTable.COLUMN_CATEGORY;
+                break;
             default:
                 throw new IllegalArgumentException("Unknown URI: " + uri);
         }
         SQLiteDatabase db = database.getWritableDatabase();
-        Cursor cursor = queryBuilder.query(db, projection, selection, selectionArgs, null, null, sortOrder);
+        Cursor cursor = queryBuilder.query(db, projection, selection, selectionArgs, groupBy, null, sortOrder);
         cursor.setNotificationUri(getContext().getContentResolver(), uri);
         return cursor;
     }

@@ -115,21 +115,21 @@ public class NoteEdit extends Activity {
 
     private void fillData(Uri uri) {
         String[] projection = { NotesTable.COLUMN_TITLE, NotesTable.COLUMN_CATEGORY, NotesTable.COLUMN_BODY };
-        Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
-        if(cursor != null) {
-            cursor.moveToFirst();
-            String title = cursor.getString(cursor.getColumnIndexOrThrow(NotesTable.COLUMN_TITLE));
-            mTitleText.setText(title);
-            String category = cursor.getString(cursor.getColumnIndexOrThrow(NotesTable.COLUMN_CATEGORY));
-            for(int i = 0; i < mCategory.getCount(); i++) {
-                String item = (String) mCategory.getItemAtPosition(i);
-                if(item.equals(category)) {
-                    mCategory.setSelection(i);
+        try (Cursor cursor = getContentResolver().query(uri, projection, null, null, null)) {
+            if(cursor != null) {
+                cursor.moveToFirst();
+                String title = cursor.getString(cursor.getColumnIndexOrThrow(NotesTable.COLUMN_TITLE));
+                mTitleText.setText(title);
+                String category = cursor.getString(cursor.getColumnIndexOrThrow(NotesTable.COLUMN_CATEGORY));
+                for(int i = 0; i < mCategory.getCount(); i++) {
+                    String item = (String) mCategory.getItemAtPosition(i);
+                    if(item.equals(category)) {
+                        mCategory.setSelection(i);
+                    }
                 }
+                String body = cursor.getString(cursor.getColumnIndexOrThrow(NotesTable.COLUMN_BODY));
+                mBodyText.setText(body);
             }
-            String body = cursor.getString(cursor.getColumnIndexOrThrow(NotesTable.COLUMN_BODY));
-            mBodyText.setText(body);
-            cursor.close();
         }
     }
 

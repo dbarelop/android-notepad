@@ -1,16 +1,17 @@
 package unizar.si.tp6.androidnotepad;
 
 import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.LoaderManager;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -19,13 +20,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.support.v4.widget.DrawerLayout;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
 import unizar.si.tp6.androidnotepad.contentprovider.NotesContentProvider;
-import unizar.si.tp6.androidnotepad.db.NotesDatabaseHelper;
 import unizar.si.tp6.androidnotepad.db.NotesTable;
 import unizar.si.tp6.androidnotepad.email.MailAbstraction;
 import unizar.si.tp6.androidnotepad.email.MailAbstractionImpl;
@@ -46,7 +45,7 @@ public class NotesList extends ActionBarActivity implements NavigationDrawerFrag
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notes_list);
 
-        mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
+        mNavigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
         // Set up the drawer.
         mNavigationDrawerFragment.setUp(R.id.navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout));
@@ -69,8 +68,8 @@ public class NotesList extends ActionBarActivity implements NavigationDrawerFrag
     }
 
     private void fillData() {
-        String[] from = new String[] { NotesTable.COLUMN_TITLE };
-        int[] to = new int[] { R.id.notes_list_item };
+        String[] from = { NotesTable.COLUMN_TITLE };
+        int[] to = { R.id.notes_list_item };
         getLoaderManager().initLoader(0, null, this);
         adapter = new SimpleCursorAdapter(this, R.layout.activity_notes_list_item, null, from, to, 0);
         listView.setAdapter(adapter);
@@ -109,7 +108,7 @@ public class NotesList extends ActionBarActivity implements NavigationDrawerFrag
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
-        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
                 .commit();
