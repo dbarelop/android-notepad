@@ -33,20 +33,6 @@ public class NotesDatabaseHelper extends SQLiteOpenHelper {
         NotesTable.onUpgrade(db, oldVersion, newVersion);
     }
 
-    public Note fetchNote(long id) {
-        Note n = null;
-        SQLiteDatabase db = getReadableDatabase();
-        try(Cursor c = db.query(true, NotesTable.TABLE_NOTES, NotesTable.availableColumns.toArray(new String[] {}), NotesTable.COLUMN_ID + " = " + id, null, null, null, null, null)) {
-            if(c.moveToNext()) {
-                String title = c.getString(c.getColumnIndexOrThrow(NotesTable.COLUMN_TITLE));
-                String category = c.getString(c.getColumnIndexOrThrow(NotesTable.COLUMN_CATEGORY));
-                String body = c.getString(c.getColumnIndexOrThrow(NotesTable.COLUMN_BODY));
-                n = new Note(title, body, new Category(category));
-            }
-        }
-        return n;
-    }
-
     public List<Category> getCategories() {
         SQLiteDatabase db = getReadableDatabase();
         List<Category> categories = new ArrayList<>();

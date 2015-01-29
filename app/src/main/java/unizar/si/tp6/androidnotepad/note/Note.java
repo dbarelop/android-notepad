@@ -1,5 +1,9 @@
 package unizar.si.tp6.androidnotepad.note;
 
+import android.database.Cursor;
+
+import unizar.si.tp6.androidnotepad.db.NotesTable;
+
 /**
  * Created by dbarelop on 28/11/14.
  */
@@ -43,6 +47,18 @@ public class Note {
 	public void setCategory(Category category) {
 		this.category = category;
 	}
+
+    public static Note fetchNote(Cursor cursor) {
+        if(cursor.isClosed()) {
+            return null;
+        } else {
+            String title = cursor.getString(cursor.getColumnIndexOrThrow(NotesTable.COLUMN_TITLE));
+            String body = cursor.getString(cursor.getColumnIndexOrThrow(NotesTable.COLUMN_BODY));
+            String c = cursor.getString(cursor.getColumnIndexOrThrow(NotesTable.COLUMN_CATEGORY));
+            Category category = new Category(c);
+            return new Note(title, body, category);
+        }
+    }
 
     @Override
     public String toString() {

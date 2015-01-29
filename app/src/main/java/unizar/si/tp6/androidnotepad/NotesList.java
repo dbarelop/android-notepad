@@ -40,14 +40,11 @@ public class NotesList extends ActionBarActivity implements NavigationDrawerFrag
     private ListView listView;
     private NavigationDrawerFragment mNavigationDrawerFragment;
     private CharSequence mTitle;
-    private NotesDatabaseHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notes_list);
-
-        dbHelper = new NotesDatabaseHelper(this);
 
         mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
@@ -91,7 +88,12 @@ public class NotesList extends ActionBarActivity implements NavigationDrawerFrag
             case CONTEXT_MENU_EMAIL_ID:
                 info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
                 MailAbstraction email = new MailAbstractionImpl(this);
-                Note n = dbHelper.fetchNote(info.id);
+                uri = Uri.parse(NotesContentProvider.CONTENT_URI + "/" + info.id);
+                Note n = null;
+                try (Cursor c = getContentResolver().query(uri, null, null, null, null)) {
+                    c.moveToFirst();
+                    n = Note.fetchNote(c);
+                }
                 String subject = n == null ? null : n.getTitle();
                 String body = n == null ? null : n.getBody();
                 try {
@@ -114,6 +116,7 @@ public class NotesList extends ActionBarActivity implements NavigationDrawerFrag
     }
 
     public void onSectionAttached(int number) {
+        // TODO: cambiar título por nombre de categoría
         switch (number) {
             case 1:
                 mTitle = getString(R.string.title_section1);
@@ -208,12 +211,8 @@ public class NotesList extends ActionBarActivity implements NavigationDrawerFrag
             return fragment;
         }
 
-        public PlaceholderFragment() {
-        }
-
         @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_notes_list, container, false);
             return rootView;
         }
@@ -221,8 +220,7 @@ public class NotesList extends ActionBarActivity implements NavigationDrawerFrag
         @Override
         public void onAttach(Activity activity) {
             super.onAttach(activity);
-            ((NotesList) activity).onSectionAttached(
-                    getArguments().getInt(ARG_SECTION_NUMBER));
+            ((NotesList) activity).onSectionAttached(getArguments().getInt(ARG_SECTION_NUMBER));
         }
     }
 
