@@ -103,10 +103,9 @@ public class NavigationDrawerFragment extends Fragment implements LoaderManager.
                 selectItem(position);
             }
         });
-        String[] from = { NotesTable.COLUMN_CATEGORY };
-        int[] to = { R.id.fragment_notes_list };
+        String[] from = {NotesTable.COLUMN_CATEGORY};
+        int[] to = {R.id.fragment_notes_list};
         getLoaderManager().initLoader(0, null, this);
-        // TODO: no se actualiza cuando se modifica la categoría de una nota
         adapter = new SimpleCursorAdapter(getActionBar().getThemedContext(), R.layout.fragment_notes_list, null, from, to, 0);
         mDrawerListView.setAdapter(adapter);
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
@@ -255,7 +254,7 @@ public class NavigationDrawerFragment extends Fragment implements LoaderManager.
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         Uri uri = Uri.parse(NotesContentProvider.CONTENT_URI + "/CATEGORIES");
-        String[] projection = { NotesTable.COLUMN_ID, NotesTable.COLUMN_CATEGORY };
+        String[] projection = {NotesTable.COLUMN_ID, NotesTable.COLUMN_CATEGORY};
         CursorLoader cursorLoader = new CursorLoader(getActionBar().getThemedContext(), uri, projection, null, null, null);
         return cursorLoader;
     }
@@ -272,7 +271,7 @@ public class NavigationDrawerFragment extends Fragment implements LoaderManager.
 
     protected Category getCategoryAtPosition(int position) {
         Cursor c = ((SimpleCursorAdapter) mDrawerListView.getAdapter()).getCursor();
-        if(c == null) {
+        if (c == null) {
             return null;
         } else {
             c.moveToPosition(position);

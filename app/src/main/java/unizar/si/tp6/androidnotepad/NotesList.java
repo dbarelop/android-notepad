@@ -162,7 +162,16 @@ public class NotesList extends ActionBarActivity implements NavigationDrawerFrag
         Intent i = new Intent(this, NoteEdit.class);
         Uri notesUri = Uri.parse(NotesContentProvider.CONTENT_URI + "/" + id);
         i.putExtra(NotesContentProvider.CONTENT_ITEM_TYPE, notesUri);
-        startActivity(i);
+        startActivityForResult(i, 1);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case 1:
+                mNavigationDrawerFragment.getLoaderManager().restartLoader(0, null, mNavigationDrawerFragment);
+                break;
+        }
     }
 
     @Override
