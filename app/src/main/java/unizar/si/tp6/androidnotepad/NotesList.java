@@ -86,6 +86,7 @@ public class NotesList extends ActionBarActivity implements NavigationDrawerFrag
                 Uri uri = Uri.parse(NotesContentProvider.CONTENT_URI + "/" + info.id);
                 getContentResolver().delete(uri, null, null);
                 fillData();
+                mNavigationDrawerFragment.getLoaderManager().restartLoader(0, null, mNavigationDrawerFragment);
                 return true;
             case CONTEXT_MENU_EMAIL_ID:
                 info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();

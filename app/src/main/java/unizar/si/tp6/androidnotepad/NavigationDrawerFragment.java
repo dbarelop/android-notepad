@@ -107,6 +107,7 @@ public class NavigationDrawerFragment extends Fragment implements LoaderManager.
         int[] to = {R.id.fragment_notes_list};
         getLoaderManager().initLoader(0, null, this);
         adapter = new SimpleCursorAdapter(getActionBar().getThemedContext(), R.layout.fragment_notes_list, null, from, to, 0);
+        // TODO: organizar en 2 grupos: "Todas las categorías" (sin filtrado) y "Listado de categorías" (con filtrado)
         mDrawerListView.setAdapter(adapter);
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
         return mDrawerListView;
