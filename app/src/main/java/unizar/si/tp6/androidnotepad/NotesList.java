@@ -10,9 +10,9 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -28,6 +28,7 @@ import unizar.si.tp6.androidnotepad.contentprovider.NotesContentProvider;
 import unizar.si.tp6.androidnotepad.db.NotesTable;
 import unizar.si.tp6.androidnotepad.email.MailAbstraction;
 import unizar.si.tp6.androidnotepad.email.MailAbstractionImpl;
+import unizar.si.tp6.androidnotepad.note.Category;
 import unizar.si.tp6.androidnotepad.note.Note;
 
 
@@ -39,6 +40,8 @@ public class NotesList extends ActionBarActivity implements NavigationDrawerFrag
     private ListView listView;
     private NavigationDrawerFragment mNavigationDrawerFragment;
     private CharSequence mTitle;
+
+    private Category selectedCategory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,8 +71,8 @@ public class NotesList extends ActionBarActivity implements NavigationDrawerFrag
     }
 
     private void fillData() {
-        String[] from = { NotesTable.COLUMN_TITLE };
-        int[] to = { R.id.notes_list_item };
+        String[] from = {NotesTable.COLUMN_TITLE};
+        int[] to = {R.id.notes_list_item};
         getLoaderManager().initLoader(0, null, this);
         adapter = new SimpleCursorAdapter(this, R.layout.activity_notes_list_item, null, from, to, 0);
         listView.setAdapter(adapter);
@@ -97,7 +100,7 @@ public class NotesList extends ActionBarActivity implements NavigationDrawerFrag
                 String body = n == null ? null : n.getBody();
                 try {
                     email.send(subject, body);
-                } catch(Exception e) {
+                } catch (Exception e) {
                     Log.d(NotesList.class.getName(), e.toString());
                 }
                 return true;
@@ -110,28 +113,19 @@ public class NotesList extends ActionBarActivity implements NavigationDrawerFrag
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction()
-                .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
+                .replace(R.id.container, PlaceholderFragment.newInstance(position))
                 .commit();
     }
 
     public void onSectionAttached(int number) {
-        // TODO: cambiar título por nombre de categoría
-        switch (number) {
-            case 1:
-                mTitle = getString(R.string.title_section1);
-                break;
-            case 2:
-                mTitle = getString(R.string.title_section2);
-                break;
-            case 3:
-                mTitle = getString(R.string.title_section3);
-                break;
-        }
+        selectedCategory = mNavigationDrawerFragment.getCategoryAtPosition(number);
+        getLoaderManager().restartLoader(0, null, this);
+        mTitle = selectedCategory == null ? "Sin título" : selectedCategory.toString();
+        getSupportActionBar().setTitle(mTitle);
     }
 
     public void restoreActionBar() {
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setTitle(mTitle);
     }
@@ -151,7 +145,7 @@ public class NotesList extends ActionBarActivity implements NavigationDrawerFrag
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()) {
+        switch (item.getItemId()) {
             case R.id.insert_note:
                 createNote();
                 return true;
@@ -173,8 +167,10 @@ public class NotesList extends ActionBarActivity implements NavigationDrawerFrag
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        String[] projection = { NotesTable.COLUMN_ID, NotesTable.COLUMN_TITLE };
-        CursorLoader cursorLoader = new CursorLoader(this, NotesContentProvider.CONTENT_URI, projection, null, null, null);
+        Uri uri = NotesContentProvider.CONTENT_URI;
+        uri = selectedCategory != null ? Uri.parse(uri + "/CATEGORY/" + selectedCategory) : uri;
+        String[] projection = {NotesTable.COLUMN_ID, NotesTable.COLUMN_TITLE};
+        CursorLoader cursorLoader = new CursorLoader(this, uri, projection, null, null, null);
         return cursorLoader;
     }
 

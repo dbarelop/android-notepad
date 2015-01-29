@@ -29,6 +29,7 @@ import android.widget.Toast;
 
 import unizar.si.tp6.androidnotepad.contentprovider.NotesContentProvider;
 import unizar.si.tp6.androidnotepad.db.NotesTable;
+import unizar.si.tp6.androidnotepad.note.Category;
 
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
@@ -253,7 +254,7 @@ public class NavigationDrawerFragment extends Fragment implements LoaderManager.
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        Uri uri = Uri.parse(NotesContentProvider.CONTENT_URI + "/CATEGORY");
+        Uri uri = Uri.parse(NotesContentProvider.CONTENT_URI + "/CATEGORIES");
         String[] projection = { NotesTable.COLUMN_ID, NotesTable.COLUMN_CATEGORY };
         CursorLoader cursorLoader = new CursorLoader(getActionBar().getThemedContext(), uri, projection, null, null, null);
         return cursorLoader;
@@ -267,5 +268,15 @@ public class NavigationDrawerFragment extends Fragment implements LoaderManager.
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         adapter.swapCursor(null);
+    }
+
+    protected Category getCategoryAtPosition(int position) {
+        Cursor c = ((SimpleCursorAdapter) mDrawerListView.getAdapter()).getCursor();
+        if(c == null) {
+            return null;
+        } else {
+            c.moveToPosition(position);
+            return Category.fetchCategory(c);
+        }
     }
 }
