@@ -1,13 +1,15 @@
 package unizar.si.tp6.androidnotepad;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.LoaderManager;
 import android.content.CursorLoader;
 import android.content.Loader;
-import android.database.Cursor;
-import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.database.Cursor;
+import android.database.MatrixCursor;
+import android.database.MergeCursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -48,25 +50,24 @@ public class NavigationDrawerFragment extends Fragment implements LoaderManager.
      * expands it. This shared preference tracks this.
      */
     private static final String PREF_USER_LEARNED_DRAWER = "navigation_drawer_learned";
-
+    private final MatrixCursor EXTRAS_CURSOR = new MatrixCursor(new String[]{NotesTable.COLUMN_ID, NotesTable.COLUMN_CATEGORY}) {{
+        // TODO: parametrizar
+        addRow(new Object[]{-1, "Todas las categorías"});
+    }};
     /**
      * A pointer to the current callbacks instance (the Activity).
      */
     private NavigationDrawerCallbacks mCallbacks;
-
     /**
      * Helper component that ties the action bar to the navigation drawer.
      */
     private ActionBarDrawerToggle mDrawerToggle;
-
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerListView;
     private View mFragmentContainerView;
-
     private int mCurrentSelectedPosition = 0;
     private boolean mFromSavedInstanceState;
     private boolean mUserLearnedDrawer;
-
     private SimpleCursorAdapter adapter;
 
     @Override
@@ -107,7 +108,6 @@ public class NavigationDrawerFragment extends Fragment implements LoaderManager.
         int[] to = {R.id.fragment_notes_list};
         getLoaderManager().initLoader(0, null, this);
         adapter = new SimpleCursorAdapter(getActionBar().getThemedContext(), R.layout.fragment_notes_list, null, from, to, 0);
-        // TODO: organizar en 2 grupos: "Todas las categorías" (sin filtrado) y "Listado de categorías" (con filtrado)
         mDrawerListView.setAdapter(adapter);
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
         return mDrawerListView;
@@ -219,12 +219,10 @@ public class NavigationDrawerFragment extends Fragment implements LoaderManager.
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
-
         if (item.getItemId() == R.id.action_example) {
             Toast.makeText(getActivity(), "Example action.", Toast.LENGTH_SHORT).show();
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -242,16 +240,6 @@ public class NavigationDrawerFragment extends Fragment implements LoaderManager.
         return ((ActionBarActivity) getActivity()).getSupportActionBar();
     }
 
-    /**
-     * Callbacks interface that all activities using this fragment must implement.
-     */
-    public static interface NavigationDrawerCallbacks {
-        /**
-         * Called when an item in the navigation drawer is selected.
-         */
-        void onNavigationDrawerItemSelected(int position);
-    }
-
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         Uri uri = Uri.parse(NotesContentProvider.CONTENT_URI + "/CATEGORIES");
@@ -262,16 +250,31 @@ public class NavigationDrawerFragment extends Fragment implements LoaderManager.
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        adapter.swapCursor(data);
+        MergeCursor extendedCursor = new MergeCursor(new Cursor[]{EXTRAS_CURSOR, data});
+        adapter.swapCursor(extendedCursor);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        adapter.swapCursor(null);
+        adapter.swapCursor(EXTRAS_CURSOR);
     }
 
     protected Category getCategoryAtPosition(int position) {
-        Cursor c = (Cursor) mDrawerListView.getItemAtPosition(position);
-        return c == null ? null : new Category(c.getString(c.getColumnIndexOrThrow(NotesTable.COLUMN_CATEGORY)));
+        if (position > 0) {
+            Cursor c = (Cursor) mDrawerListView.getItemAtPosition(position);
+            return c == null ? null : new Category(c.getString(c.getColumnIndexOrThrow(NotesTable.COLUMN_CATEGORY)));
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Callbacks interface that all activities using this fragment must implement.
+     */
+    public static interface NavigationDrawerCallbacks {
+        /**
+         * Called when an item in the navigation drawer is selected.
+         */
+        void onNavigationDrawerItemSelected(int position);
     }
 }

@@ -25,5 +25,6 @@
     <string name="subject">Subject</string>
     <string name="send">Send</string>
     <string name="java_mail_form">Send mail</string>
+    <string name="all_categories">Todas las categorías</string>
 
 </resources>
