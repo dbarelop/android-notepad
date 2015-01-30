@@ -31,13 +31,4 @@ public class Category {
     public boolean equals(Object obj) {
         return obj instanceof Category && name.equals(((Category) obj).getName());
     }
-
-    public static Category fetchCategory(Cursor cursor) {
-        if(cursor.isClosed()) {
-            return null;
-        } else {
-            String category = cursor.getString(cursor.getColumnIndexOrThrow(NotesTable.COLUMN_CATEGORY));
-            return new Category(category);
-        }
-    }
 }

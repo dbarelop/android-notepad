@@ -271,12 +271,7 @@ public class NavigationDrawerFragment extends Fragment implements LoaderManager.
     }
 
     protected Category getCategoryAtPosition(int position) {
-        Cursor c = ((SimpleCursorAdapter) mDrawerListView.getAdapter()).getCursor();
-        if (c == null) {
-            return null;
-        } else {
-            c.moveToPosition(position);
-            return Category.fetchCategory(c);
-        }
+        Cursor c = (Cursor) mDrawerListView.getItemAtPosition(position);
+        return c == null ? null : new Category(c.getString(c.getColumnIndexOrThrow(NotesTable.COLUMN_CATEGORY)));
     }
 }
