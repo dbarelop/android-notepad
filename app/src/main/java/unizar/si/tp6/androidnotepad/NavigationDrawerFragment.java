@@ -219,7 +219,7 @@ public class NavigationDrawerFragment extends Fragment implements LoaderManager.
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
-        if (item.getItemId() == R.id.action_example) {
+        if (item.getItemId() == R.id.insert_note) {
             Toast.makeText(getActivity(), "Example action.", Toast.LENGTH_SHORT).show();
             return true;
         }

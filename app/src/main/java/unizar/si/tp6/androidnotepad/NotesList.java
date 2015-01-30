@@ -11,7 +11,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -119,16 +118,12 @@ public class NotesList extends ActionBarActivity implements NavigationDrawerFrag
     }
 
     public void onSectionAttached(int number) {
-        selectedCategory = mNavigationDrawerFragment.getCategoryAtPosition(number);
-        getLoaderManager().restartLoader(0, null, this);
-        mTitle = selectedCategory == null ? getString(R.string.all_categories) : selectedCategory.toString();
-        getSupportActionBar().setTitle(mTitle);
-    }
-
-    public void restoreActionBar() {
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setTitle(mTitle);
+        if (mNavigationDrawerFragment != null) {
+            selectedCategory = mNavigationDrawerFragment.getCategoryAtPosition(number);
+            getLoaderManager().restartLoader(0, null, this);
+            mTitle = selectedCategory == null ? getString(R.string.all_categories) : selectedCategory.toString();
+            getSupportActionBar().setTitle(mTitle);
+        }
     }
 
     @Override
@@ -138,7 +133,7 @@ public class NotesList extends ActionBarActivity implements NavigationDrawerFrag
             // if the drawer is not showing. Otherwise, let the drawer
             // decide what to show in the action bar.
             getMenuInflater().inflate(R.menu.notes_list, menu);
-            restoreActionBar();
+            getSupportActionBar().setTitle(mTitle);
             return true;
         }
         return super.onCreateOptionsMenu(menu);

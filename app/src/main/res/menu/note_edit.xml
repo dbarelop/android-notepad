@@ -1,6 +1,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/insert_note"
+        android:id="@+id/select_categories"
         android:showAsAction="always"
-        android:title="@string/action_insert_note" />
+        android:title="@string/action_change_category" />
 </menu>
