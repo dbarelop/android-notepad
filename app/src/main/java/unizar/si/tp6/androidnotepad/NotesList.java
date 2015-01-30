@@ -73,9 +73,9 @@ public class NotesList extends ActionBarActivity implements NavigationDrawerFrag
     private void fillData() {
         String[] from = {NotesTable.COLUMN_TITLE};
         int[] to = {R.id.notes_list_item};
-        getLoaderManager().initLoader(0, null, this);
         adapter = new SimpleCursorAdapter(this, R.layout.activity_notes_list_item, null, from, to, 0);
         listView.setAdapter(adapter);
+        getLoaderManager().initLoader(0, null, this);
     }
 
     @Override

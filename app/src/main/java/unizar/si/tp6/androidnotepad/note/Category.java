@@ -27,6 +27,11 @@ public class Category {
         return name;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof Category && name.equals(((Category) obj).getName());
+    }
+
     public static Category fetchCategory(Cursor cursor) {
         if(cursor.isClosed()) {
             return null;

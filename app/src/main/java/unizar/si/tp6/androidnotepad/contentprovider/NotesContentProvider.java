@@ -10,8 +10,6 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.text.TextUtils;
 
-import org.apache.http.auth.AUTH;
-
 import java.util.Arrays;
 import java.util.HashSet;
 

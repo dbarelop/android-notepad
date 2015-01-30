@@ -2,26 +2,27 @@ package unizar.si.tp6.androidnotepad;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.LoaderManager;
 import android.content.ContentValues;
+import android.content.CursorLoader;
 import android.content.DialogInterface;
+import android.content.Loader;
 import android.database.Cursor;
+import android.database.MatrixCursor;
+import android.database.MergeCursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import unizar.si.tp6.androidnotepad.contentprovider.NotesContentProvider;
-import unizar.si.tp6.androidnotepad.db.NotesDatabaseHelper;
 import unizar.si.tp6.androidnotepad.db.NotesTable;
 import unizar.si.tp6.androidnotepad.note.Category;
 
@@ -29,11 +30,13 @@ import unizar.si.tp6.androidnotepad.note.Category;
  * Created by dbarelop on 05/01/15.
  */
 public class NoteEdit extends Activity {
+    private final Category NEW_CATEGORY = new Category(null);
+    private final Category INITIAL_CATEGORY = new Category(null);
     private Spinner mCategory;
     private EditText mTitleText;
     private EditText mBodyText;
-    private Uri notesUri;
-    private ArrayAdapter<String> categoriesAdapter;
+    private Uri noteUri;
+    private LoaderManager.LoaderCallbacks<Cursor> categoriesLoader;
 
     @Override
     protected void onCreate(Bundle bundle) {
@@ -45,19 +48,19 @@ public class NoteEdit extends Activity {
         mBodyText = (EditText) findViewById(R.id.body);
         Button confirmButton = (Button) findViewById(R.id.confirm);
 
-        NotesDatabaseHelper dbHelper = new NotesDatabaseHelper(this);
-        List<String> categories = new ArrayList<>();
-        for(Category c : dbHelper.getCategories()) {
-            categories.add(c.toString());
+        Bundle extras = getIntent().getExtras();
+        if(bundle != null || getIntent().getExtras() != null) {
+            noteUri = extras.getParcelable(NotesContentProvider.CONTENT_ITEM_TYPE);
+            fillData(noteUri);
+        } else {
+            noteUri = null;
         }
-        categories.add("New category");
-        categoriesAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_activated_1, android.R.id.text1, categories);
-        mCategory.setAdapter(categoriesAdapter);
+
+        fillCategoriesSpinner();
         mCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String item = (String) parent.getItemAtPosition(position);
-                if (item.equals("New category")) {
+                if (position == parent.getAdapter().getCount()-1) {
                     newCategory();
                 }
             }
@@ -67,14 +70,6 @@ public class NoteEdit extends Activity {
 
             }
         });
-
-        Bundle extras = getIntent().getExtras();
-        if(bundle != null || getIntent().getExtras() != null) {
-            notesUri = extras.getParcelable(NotesContentProvider.CONTENT_ITEM_TYPE);
-            fillData(notesUri);
-        } else {
-            notesUri = null;
-        }
 
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,6 +84,48 @@ public class NoteEdit extends Activity {
         });
     }
 
+    private void fillCategoriesSpinner() {
+        String[] from = {NotesTable.COLUMN_CATEGORY};
+        int[] to = {android.R.id.text1};
+        final SimpleCursorAdapter categoriesAdapter = new SimpleCursorAdapter(this, android.R.layout.simple_spinner_item, null, from, to, 0);
+        categoriesLoader = new LoaderManager.LoaderCallbacks<Cursor>() {
+            private MatrixCursor extrasCursor;
+
+            @Override
+            public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+                Uri uri = Uri.parse(NotesContentProvider.CONTENT_URI + "/CATEGORIES");
+                String[] projection = { NotesTable.COLUMN_ID, NotesTable.COLUMN_CATEGORY };
+                CursorLoader cursorLoader = new CursorLoader(getApplicationContext(), uri, projection, null, null, null);
+                extrasCursor = new MatrixCursor(projection);
+                if (NEW_CATEGORY.getName() != null) {
+                    extrasCursor.addRow(new Object[] { -1, NEW_CATEGORY.getName() });
+                }
+                extrasCursor.addRow(new Object[] { -2, "New category" });
+                return cursorLoader;
+            }
+
+            @Override
+            public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+                MergeCursor extendedCursor = new MergeCursor(new Cursor[]{ data, extrasCursor });
+                categoriesAdapter.swapCursor(extendedCursor);
+                for(int i = 0; i < categoriesAdapter.getCount()-1; i++) {
+                    Cursor c = (Cursor) mCategory.getItemAtPosition(i);
+                    String item = c.getString(c.getColumnIndexOrThrow(NotesTable.COLUMN_CATEGORY));
+                    if((NEW_CATEGORY.getName() != null && NEW_CATEGORY.getName().equals(item)) || INITIAL_CATEGORY.getName().equals(item)) {
+                        mCategory.setSelection(i);
+                    }
+                }
+            }
+
+            @Override
+            public void onLoaderReset(Loader<Cursor> loader) {
+                categoriesAdapter.swapCursor(extrasCursor);
+            }
+        };
+        mCategory.setAdapter(categoriesAdapter);
+        getLoaderManager().initLoader(0, null, categoriesLoader);
+    }
+
     private void newCategory() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("New category");
@@ -98,10 +135,8 @@ public class NoteEdit extends Activity {
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                String newCategory = input.getText().toString();
-                categoriesAdapter.add(newCategory);
-                categoriesAdapter.notifyDataSetChanged();
-                mCategory.setSelection(categoriesAdapter.getPosition(newCategory));
+                NEW_CATEGORY.setName(input.getText().toString());
+                getLoaderManager().restartLoader(0, null, categoriesLoader);
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -121,12 +156,7 @@ public class NoteEdit extends Activity {
                 String title = cursor.getString(cursor.getColumnIndexOrThrow(NotesTable.COLUMN_TITLE));
                 mTitleText.setText(title);
                 String category = cursor.getString(cursor.getColumnIndexOrThrow(NotesTable.COLUMN_CATEGORY));
-                for(int i = 0; i < mCategory.getCount(); i++) {
-                    String item = (String) mCategory.getItemAtPosition(i);
-                    if(item.equals(category)) {
-                        mCategory.setSelection(i);
-                    }
-                }
+                INITIAL_CATEGORY.setName(category);
                 String body = cursor.getString(cursor.getColumnIndexOrThrow(NotesTable.COLUMN_BODY));
                 mBodyText.setText(body);
             }
@@ -137,7 +167,7 @@ public class NoteEdit extends Activity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         saveState();
-        outState.putParcelable(NotesContentProvider.CONTENT_ITEM_TYPE, notesUri);
+        outState.putParcelable(NotesContentProvider.CONTENT_ITEM_TYPE, noteUri);
     }
 
     @Override
@@ -148,17 +178,18 @@ public class NoteEdit extends Activity {
 
     private void saveState() {
         String title = mTitleText.getText().toString();
-        String category = (String) mCategory.getSelectedItem();
+        Cursor c = (Cursor) mCategory.getSelectedItem();
+        String category = c.getString(c.getColumnIndexOrThrow(NotesTable.COLUMN_CATEGORY));
         String body = mBodyText.getText().toString();
         if(!title.isEmpty() || !body.isEmpty()) {
             ContentValues values = new ContentValues();
             values.put(NotesTable.COLUMN_TITLE, title);
             values.put(NotesTable.COLUMN_CATEGORY, category);
             values.put(NotesTable.COLUMN_BODY, body);
-            if(notesUri == null) {
-                notesUri = getContentResolver().insert(NotesContentProvider.CONTENT_URI, values);
+            if(noteUri == null) {
+                noteUri = getContentResolver().insert(NotesContentProvider.CONTENT_URI, values);
             } else {
-                getContentResolver().update(notesUri, values, null, null);
+                getContentResolver().update(noteUri, values, null, null);
             }
         }
     }
