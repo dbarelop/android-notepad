@@ -22,11 +22,10 @@ public class NotesTable {
                     + COLUMN_ID + " integer primary key autoincrement, "
                     + COLUMN_TITLE + " text not null, "
                     + COLUMN_BODY + " text not null, "
-                    + COLUMN_CATEGORY + " text not null);";
+                    + COLUMN_CATEGORY + " text);";
 
     public static void onCreate(SQLiteDatabase db) {
         db.execSQL(DATABASE_CREATE);
-        db.execSQL("insert into notes(title, body, category) values ('tit0', 'bod0', 'cat0');");
     }
 
     public static void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {

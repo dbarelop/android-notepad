@@ -142,7 +142,28 @@ public class NavigationDrawerFragment extends Fragment implements LoaderManager.
                 mDrawerLayout,                    /* DrawerLayout object */
                 R.string.navigation_drawer_open,  /* "open drawer" description for accessibility */
                 R.string.navigation_drawer_close  /* "close drawer" description for accessibility */
-        );
+        ) {
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                super.onDrawerClosed(drawerView);
+                if (isAdded()) {
+                    getActivity().invalidateOptionsMenu();
+                }
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                if (isAdded()) {
+                    if (!mUserLearnedDrawer) {
+                        mUserLearnedDrawer = true;
+                        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                        sp.edit().putBoolean(PREF_USER_LEARNED_DRAWER, true).apply();
+                    }
+                    getActivity().invalidateOptionsMenu();
+                }
+            }
+        };
 
         // If the user hasn't 'learned' about the drawer, open it to introduce them to the drawer,
         // per the navigation drawer design guidelines.
@@ -209,7 +230,7 @@ public class NavigationDrawerFragment extends Fragment implements LoaderManager.
         // showGlobalContextActionBar, which controls the top-left area of the action bar.
         if (mDrawerLayout != null && isDrawerOpen()) {
             inflater.inflate(R.menu.global, menu);
-            showGlobalContextActionBar();
+            getActionBar().setTitle(R.string.app_name);
         }
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -224,16 +245,6 @@ public class NavigationDrawerFragment extends Fragment implements LoaderManager.
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    /**
-     * Per the navigation drawer design guidelines, updates the action bar to show the global app
-     * 'context', rather than just what's in the current screen.
-     */
-    private void showGlobalContextActionBar() {
-        ActionBar actionBar = getActionBar();
-        actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setTitle(R.string.app_name);
     }
 
     private ActionBar getActionBar() {

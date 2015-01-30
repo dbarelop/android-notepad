@@ -56,12 +56,8 @@ public class NoteEdit extends ActionBarActivity {
             @Override
             public void onClick(View view) {
                 String title = mTitleText.getText().toString();
-                String category = SELECTED_CATEGORY.getName();
-                // TODO: permitir notas sin categoría
                 if (title.isEmpty()) {
                     makeToast("Title field cannot be empty", Toast.LENGTH_LONG);
-                } else if (category == null || category.isEmpty()) {
-                    makeToast("Category field cannot be empty", Toast.LENGTH_LONG);
                 } else {
                     setResult(RESULT_OK);
                     finish();
