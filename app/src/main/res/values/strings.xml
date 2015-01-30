@@ -7,7 +7,7 @@
     <string name="title_section3">Section 3</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="action_example">Insert note</string>
+    <string name="action_insert_note">Insert note</string>
     <string name="action_settings">Settings</string>
     <string name="context_menu_delete">Delete</string>
     <string name="context_menu_email">Email</string>
@@ -26,5 +26,9 @@
     <string name="send">Send</string>
     <string name="java_mail_form">Send mail</string>
     <string name="all_categories">Todas las categorías</string>
+    <string name="action_change_category">Cambiar categoría</string>
+    <string name="accept">Accept</string>
+    <string name="cancel">Cancel</string>
+    <string name="new_category">New category</string>
 
 </resources>

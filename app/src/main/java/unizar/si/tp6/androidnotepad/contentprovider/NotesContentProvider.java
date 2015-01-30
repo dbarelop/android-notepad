@@ -42,7 +42,6 @@ public class NotesContentProvider extends ContentProvider implements Testable {
         sURIMatcher.addURI(AUTHORITY, BASE_PATH + "/CATEGORIES", CATEGORIES);
         sURIMatcher.addURI(AUTHORITY, BASE_PATH + "/CATEGORY/*", NOTES_CATEGORY);
     }
-
     private static final ContentValues[] insertTESTS_values = new ContentValues[4];
     private static final Object[][] insertTESTS = {
             {CONTENT_URI, insertTESTS_values[0]},
@@ -50,7 +49,6 @@ public class NotesContentProvider extends ContentProvider implements Testable {
             {CONTENT_URI, insertTESTS_values[2]},
             {CONTENT_URI, insertTESTS_values[3]}};
     private static final ContentValues[] updateTESTS_values = new ContentValues[4];
-
     static {
         for (int i = 0; i < Math.max(insertTESTS_values.length, updateTESTS_values.length); i++) {
             if (i < insertTESTS_values.length) insertTESTS_values[i] = new ContentValues();
@@ -195,9 +193,9 @@ public class NotesContentProvider extends ContentProvider implements Testable {
     }
 
     private void checkColumns(String[] projection) {
-        if(projection != null) {
+        if (projection != null) {
             HashSet<String> requestedColumns = new HashSet<String>(Arrays.asList(projection));
-            if(!NotesTable.availableColumns.containsAll(requestedColumns)) {
+            if (!NotesTable.availableColumns.containsAll(requestedColumns)) {
                 throw new IllegalArgumentException("Unknown columns in projection");
             }
         }
