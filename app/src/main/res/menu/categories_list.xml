@@ -1,15 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="unizar.si.tp6.androidnotepad.NotesList">
-    <item
-        android:id="@+id/insert_note"
-        android:title="@string/action_insert_note"
-        app:showAsAction="withText|ifRoom" />
-    <item
-        android:id="@+id/manage_categories"
-        android:title="@string/manage_categories"
-        app:showAsAction="never" />
+    tools:context="unizar.si.tp6.androidnotepad.CategoriesList">
     <item
         android:id="@+id/action_settings"
         android:title="@string/action_settings"

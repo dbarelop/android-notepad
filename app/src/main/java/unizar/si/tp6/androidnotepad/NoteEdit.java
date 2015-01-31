@@ -98,10 +98,14 @@ public class NoteEdit extends ActionBarActivity {
         String title = mTitleText.getText().toString();
         String category = SELECTED_CATEGORY.getName();
         String body = mBodyText.getText().toString();
-        if (!title.isEmpty() && !category.isEmpty()) {
+        if (!title.isEmpty()) {
             ContentValues values = new ContentValues();
             values.put(NotesTable.COLUMN_TITLE, title);
-            values.put(NotesTable.COLUMN_CATEGORY, category);
+            if (category == null) {
+                values.putNull(NotesTable.COLUMN_CATEGORY);
+            } else {
+                values.put(NotesTable.COLUMN_CATEGORY, category);
+            }
             values.put(NotesTable.COLUMN_BODY, body);
             if (noteUri == null) {
                 noteUri = getContentResolver().insert(NotesContentProvider.CONTENT_URI, values);
@@ -182,18 +186,18 @@ public class NoteEdit extends ActionBarActivity {
 
     private void newCategory() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("New category");
+        builder.setTitle(getString(R.string.new_category));
         final EditText input = new EditText(this);
         input.setInputType(InputType.TYPE_CLASS_TEXT);
         builder.setView(input);
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(getString(R.string.accept), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 NEW_CATEGORY.setName(input.getText().toString());
                 SELECTED_CATEGORY.setName(NEW_CATEGORY.getName());
             }
         });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();

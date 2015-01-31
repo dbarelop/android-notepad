@@ -64,6 +64,11 @@ public class NotesContentProvider extends ContentProvider implements Testable {
                 break;
             case CATEGORIES:
                 groupBy = NotesTable.COLUMN_CATEGORY;
+                if (TextUtils.isEmpty(selection)) {
+                    selection = NotesTable.COLUMN_CATEGORY + " is not null";
+                } else {
+                    selection += " and " + NotesTable.COLUMN_CATEGORY + " is not null";
+                }
                 break;
             case NOTES_CATEGORY:
                 queryBuilder.appendWhere(NotesTable.COLUMN_CATEGORY + " = '" + uri.getLastPathSegment().replace("'", "''") + "'");
@@ -162,6 +167,21 @@ public class NotesContentProvider extends ContentProvider implements Testable {
                     rowsUpdated = db.update(NotesTable.TABLE_NOTES, values, NotesTable.COLUMN_ID + " = " + id, null);
                 } else {
                     rowsUpdated = db.update(NotesTable.TABLE_NOTES, values, NotesTable.COLUMN_ID + " = " + id + " and " + selection, selectionArgs);
+                }
+                break;
+            case NOTES_CATEGORY:
+                String category = uri.getLastPathSegment();
+                if (TextUtils.isEmpty(selection)) {
+                    rowsUpdated = db.update(NotesTable.TABLE_NOTES, values, NotesTable.COLUMN_CATEGORY + " = ?", new String[]{category});
+                } else {
+                    String[] selectionArgs_ = selectionArgs == null ? new String[]{category} : new String[selectionArgs.length + 1];
+                    if (selectionArgs != null) {
+                        selectionArgs_[0] = category;
+                        for (int i = 0; i < selectionArgs.length; i++) {
+                            selectionArgs_[i + 1] = selectionArgs[i];
+                        }
+                    }
+                    rowsUpdated = db.update(NotesTable.TABLE_NOTES, values, NotesTable.COLUMN_CATEGORY + " = ? and " + selection, selectionArgs_);
                 }
                 break;
             default:

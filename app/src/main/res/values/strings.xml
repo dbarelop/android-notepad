@@ -2,9 +2,6 @@
 <resources>
 
     <string name="app_name">Android Notepad</string>
-    <string name="title_section1">Section 1</string>
-    <string name="title_section2">Section 2</string>
-    <string name="title_section3">Section 3</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_insert_note">Insert note</string>
@@ -25,10 +22,14 @@
     <string name="subject">Subject</string>
     <string name="send">Send</string>
     <string name="java_mail_form">Send mail</string>
-    <string name="all_categories">Todas las categorías</string>
-    <string name="action_change_category">Cambiar categoría</string>
+    <string name="all_categories">All the categories</string>
+    <string name="action_change_category">Change category</string>
     <string name="accept">Accept</string>
     <string name="cancel">Cancel</string>
     <string name="new_category">New category</string>
+    <string name="title_activity_categories_list">Categories List</string>
+    <string name="manage_categories">Manage categories</string>
+    <string name="new_category_name">New category name</string>
+    <string name="ok">OK</string>
 
 </resources>

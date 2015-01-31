@@ -84,7 +84,6 @@ public class NotesList extends ActionBarActivity implements NavigationDrawerFrag
                 AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
                 Uri uri = Uri.parse(NotesContentProvider.CONTENT_URI + "/" + info.id);
                 getContentResolver().delete(uri, null, null);
-                fillData();
                 getLoaderManager().restartLoader(0, null, this);
                 mNavigationDrawerFragment.getLoaderManager().restartLoader(0, null, mNavigationDrawerFragment);
                 return true;
@@ -146,12 +145,20 @@ public class NotesList extends ActionBarActivity implements NavigationDrawerFrag
             case R.id.insert_note:
                 createNote();
                 return true;
+            case R.id.manage_categories:
+                manageCategories();
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
     private void createNote() {
         Intent i = new Intent(this, NoteEdit.class);
+        startActivity(i);
+    }
+
+    private void manageCategories() {
+        Intent i = new Intent(this, CategoriesList.class);
         startActivity(i);
     }
 
