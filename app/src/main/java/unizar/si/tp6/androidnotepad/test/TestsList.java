@@ -33,13 +33,13 @@ public class TestsList extends ActionBarActivity {
                 Class<?> testClass = (Class<?>) parent.getItemAtPosition(position);
                 try {
                     if (Testable.class.isAssignableFrom(testClass)) {
-                        // TODO: gestionar onCreate() para clases que necesiten ejecutarlo
-                        showTestMethodsDialog((Testable) testClass.newInstance());
+                        Testable instance = ((Testable) testClass.newInstance()).getInstance(getApplicationContext());
+                        showTestMethodsDialog(instance);
                     }
                 } catch (InstantiationException e) {
+                    Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG);
                 } catch (IllegalAccessException e) {
                 }
-
             }
         };
         listView.setOnItemClickListener(testsListItemClickListener);
@@ -94,7 +94,15 @@ public class TestsList extends ActionBarActivity {
         DialogInterface.OnClickListener acceptListener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                test.performTest(instance);
+                AlertDialog.Builder builder = new AlertDialog.Builder(TestsList.this);
+                try {
+                    test.performTest(instance);
+                    builder.setTitle(getString(R.string.test_succesful));
+                } catch (Exception e) {
+                    builder.setTitle(getString(R.string.test_not_success));
+                    builder.setMessage(e.getMessage());
+                }
+                builder.show();
             }
         };
         DialogInterface.OnClickListener cancelListener = new DialogInterface.OnClickListener() {

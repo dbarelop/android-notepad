@@ -37,5 +37,8 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="perform_test">Perform test</string>
+    <string name="delete_all">Delete all notes</string>
+    <string name="test_succesful">Test run succesfully</string>
+    <string name="test_not_success">Test not succesful</string>
 
 </resources>
