@@ -10,14 +10,14 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.text.TextUtils;
 
-import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashSet;
 
 import unizar.si.tp6.androidnotepad.db.NotesDatabaseHelper;
 import unizar.si.tp6.androidnotepad.db.NotesTable;
-import unizar.si.tp6.androidnotepad.test.NotTestableException;
 import unizar.si.tp6.androidnotepad.test.Testable;
+import unizar.si.tp6.androidnotepad.test.Tests;
+import unizar.si.tp6.androidnotepad.test.contentprovider.NotesContentProviderTests;
 
 /**
  * Created by dbarelop on 05/01/15.
@@ -33,7 +33,6 @@ public class NotesContentProvider extends ContentProvider implements Testable {
     private static final String BASE_PATH = "notes";
     public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + BASE_PATH);
     private static final UriMatcher sURIMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-
     static {
         sURIMatcher.addURI(AUTHORITY, BASE_PATH, NOTES);
         sURIMatcher.addURI(AUTHORITY, BASE_PATH + "/#", NOTE_ID);
@@ -202,7 +201,12 @@ public class NotesContentProvider extends ContentProvider implements Testable {
 
     /*------------------------------------------ TESTS -------------------------------------------*/
 
-    private static final ContentValues[] insertTESTS_values = new ContentValues[4];
+    @Override
+    public Tests<NotesContentProvider> getTests() {
+        return new NotesContentProviderTests();
+    }
+
+    /*private static final ContentValues[] insertTESTS_values = new ContentValues[4];
     private static final ContentValues[] updateTESTS_values = new ContentValues[4];
 
     static {
@@ -268,5 +272,5 @@ public class NotesContentProvider extends ContentProvider implements Testable {
         } catch (NoSuchMethodException e) {
             throw new NotTestableException("Class " + this.getClass().getName() + " does not include method " + m.getName());
         }
-    }
+    }*/
 }
