@@ -9,7 +9,7 @@ public abstract class Test<C extends Testable> {
      *
      * @param instance The instance of the Testable class to perform the test to
      */
-    public abstract void performTest(C instance);
+    public abstract void performTest(C instance) throws Exception;
 
     public abstract String getTitle();
 

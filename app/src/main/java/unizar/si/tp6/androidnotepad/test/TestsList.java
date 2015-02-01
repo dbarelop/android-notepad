@@ -33,13 +33,13 @@ public class TestsList extends ActionBarActivity {
                 Class<?> testClass = (Class<?>) parent.getItemAtPosition(position);
                 try {
                     if (Testable.class.isAssignableFrom(testClass)) {
-                        // TODO: gestionar onCreate() para clases que necesiten ejecutarlo
-                        showTestMethodsDialog((Testable) testClass.newInstance());
+                        Testable instance = ((Testable) testClass.newInstance()).getInstance(getApplicationContext());
+                        showTestMethodsDialog(instance);
                     }
                 } catch (InstantiationException e) {
+                    Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG);
                 } catch (IllegalAccessException e) {
                 }
-
             }
         };
         listView.setOnItemClickListener(testsListItemClickListener);
@@ -49,7 +49,7 @@ public class TestsList extends ActionBarActivity {
 
     private <T extends Testable> void showTestMethodsDialog(final T instance) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Select a method to test");
+        builder.setTitle(getString(R.string.select_method));
         final Class<?> testClass = instance.getClass();
         final Method[] methods = testClass.getDeclaredMethods();
         CharSequence[] methodsNames = new CharSequence[methods.length];
@@ -72,7 +72,7 @@ public class TestsList extends ActionBarActivity {
 
     private <T extends Testable> void showTestsForMethodDialog(final List<Test<T>> testCollection, final T instance) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Select a test to perform");
+        builder.setTitle(getString(R.string.select_test));
         CharSequence[] testsNames = new CharSequence[testCollection.size()];
         for (int i = 0; i < testsNames.length; i++)
             testsNames[i] = testCollection.get(i).toString();
@@ -94,7 +94,15 @@ public class TestsList extends ActionBarActivity {
         DialogInterface.OnClickListener acceptListener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                test.performTest(instance);
+                AlertDialog.Builder builder = new AlertDialog.Builder(TestsList.this);
+                try {
+                    test.performTest(instance);
+                    builder.setTitle(getString(R.string.test_succesful));
+                } catch (Exception e) {
+                    builder.setTitle(getString(R.string.test_not_success));
+                    builder.setMessage(e.getMessage());
+                }
+                builder.show();
             }
         };
         DialogInterface.OnClickListener cancelListener = new DialogInterface.OnClickListener() {
@@ -117,16 +125,9 @@ public class TestsList extends ActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        switch (item.getItemId()) {
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 }

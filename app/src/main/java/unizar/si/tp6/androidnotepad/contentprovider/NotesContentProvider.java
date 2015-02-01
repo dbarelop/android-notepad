@@ -3,6 +3,7 @@ package unizar.si.tp6.androidnotepad.contentprovider;
 import android.content.ContentProvider;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -43,6 +44,14 @@ public class NotesContentProvider extends ContentProvider implements Testable {
 
     private NotesDatabaseHelper database;
 
+    public NotesContentProvider() {
+
+    }
+
+    public NotesContentProvider(Context context) {
+        database = new NotesDatabaseHelper(context);
+    }
+
     @Override
     public boolean onCreate() {
         database = new NotesDatabaseHelper(getContext());
@@ -78,7 +87,9 @@ public class NotesContentProvider extends ContentProvider implements Testable {
         }
         SQLiteDatabase db = database.getReadableDatabase();
         Cursor cursor = queryBuilder.query(db, projection, selection, selectionArgs, groupBy, null, sortOrder);
-        cursor.setNotificationUri(getContext().getContentResolver(), uri);
+        if (getContext() != null) {
+            cursor.setNotificationUri(getContext().getContentResolver(), uri);
+        }
         return cursor;
     }
 
@@ -101,12 +112,14 @@ public class NotesContentProvider extends ContentProvider implements Testable {
         long id;
         switch (uriType) {
             case NOTES:
-                id = db.insert(NotesTable.TABLE_NOTES, null, values);
+                id = db.insertOrThrow(NotesTable.TABLE_NOTES, null, values);
                 break;
             default:
                 throw new IllegalArgumentException("Unknown URI: " + uri);
         }
-        getContext().getContentResolver().notifyChange(uri, null);
+        if (getContext() != null) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
         return Uri.parse(BASE_PATH + "/" + id);
     }
 
@@ -139,7 +152,9 @@ public class NotesContentProvider extends ContentProvider implements Testable {
             default:
                 throw new IllegalArgumentException("Unknown URI: " + uri);
         }
-        getContext().getContentResolver().notifyChange(uri, null);
+        if (getContext() != null) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
         return rowsDeleted;
     }
 
@@ -188,7 +203,9 @@ public class NotesContentProvider extends ContentProvider implements Testable {
             default:
                 throw new IllegalArgumentException("Unknown URI: " + uri);
         }
-        getContext().getContentResolver().notifyChange(uri, null);
+        if (getContext() != null) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
         return rowsUpdated;
     }
 
@@ -206,6 +223,11 @@ public class NotesContentProvider extends ContentProvider implements Testable {
     @Override
     public Tests<NotesContentProvider> getTests() {
         return new NotesContentProviderTests();
+    }
+
+    @Override
+    public Testable getInstance(Context context) {
+        return new NotesContentProvider(context);
     }
 
 }

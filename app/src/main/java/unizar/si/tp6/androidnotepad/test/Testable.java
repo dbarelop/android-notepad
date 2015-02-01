@@ -1,5 +1,7 @@
 package unizar.si.tp6.androidnotepad.test;
 
+import android.content.Context;
+
 import unizar.si.tp6.androidnotepad.contentprovider.NotesContentProvider;
 
 /**
@@ -17,4 +19,6 @@ public interface Testable {
      * this interface
      */
     public Tests<?> getTests();
+
+    public Testable getInstance(Context context);
 }

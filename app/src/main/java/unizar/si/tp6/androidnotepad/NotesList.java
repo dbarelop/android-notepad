@@ -148,6 +148,9 @@ public class NotesList extends ActionBarActivity implements NavigationDrawerFrag
             case R.id.manage_categories:
                 manageCategories();
                 return true;
+            case R.id.delete_all:
+                deleteAllNotes();
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -160,6 +163,13 @@ public class NotesList extends ActionBarActivity implements NavigationDrawerFrag
     private void manageCategories() {
         Intent i = new Intent(this, CategoriesList.class);
         startActivity(i);
+    }
+
+    private void deleteAllNotes() {
+        Uri uri = NotesContentProvider.CONTENT_URI;
+        getContentResolver().delete(uri, null, null);
+        getLoaderManager().restartLoader(0, null, this);
+        mNavigationDrawerFragment.getLoaderManager().restartLoader(0, null, mNavigationDrawerFragment);
     }
 
     private void editNote(long id) {

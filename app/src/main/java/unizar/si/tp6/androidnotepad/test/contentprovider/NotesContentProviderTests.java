@@ -27,7 +27,7 @@ public class NotesContentProviderTests extends Tests<NotesContentProvider> {
         {
             contentValues.putNull(NotesTable.COLUMN_TITLE);
             contentValues.put(NotesTable.COLUMN_BODY, "body");
-            contentValues.put(NotesTable.COLUMN_CATEGORY, "category");
+            contentValues.put(NotesTable.COLUMN_CATEGORY, "test");
         }
 
         @Override
@@ -81,7 +81,7 @@ public class NotesContentProviderTests extends Tests<NotesContentProvider> {
         {
             contentValues.put(NotesTable.COLUMN_TITLE, "");
             contentValues.put(NotesTable.COLUMN_BODY, "body");
-            contentValues.put(NotesTable.COLUMN_CATEGORY, "category");
+            contentValues.put(NotesTable.COLUMN_CATEGORY, "test");
         }
 
         @Override
@@ -131,11 +131,9 @@ public class NotesContentProviderTests extends Tests<NotesContentProvider> {
         private final String DESCRIPTION = "Inserts 1000 notes";
         private final Uri uri = NotesContentProvider.CONTENT_URI;
         private final ContentValues contentValues = new ContentValues();
-
         {
-            contentValues.put(NotesTable.COLUMN_TITLE, "title");
             contentValues.put(NotesTable.COLUMN_BODY, "body");
-            contentValues.put(NotesTable.COLUMN_CATEGORY, "category");
+            contentValues.put(NotesTable.COLUMN_CATEGORY, "test");
         }
 
         private int N = 1000;
@@ -143,6 +141,7 @@ public class NotesContentProviderTests extends Tests<NotesContentProvider> {
         @Override
         public void performTest(NotesContentProvider instance) {
             for (int i = 0; i < N; i++) {
+                contentValues.put(NotesTable.COLUMN_TITLE, "title" + i);
                 instance.insert(uri, contentValues);
             }
         }
@@ -168,7 +167,7 @@ public class NotesContentProviderTests extends Tests<NotesContentProvider> {
         {
             contentValues.putNull(NotesTable.COLUMN_TITLE);
             contentValues.put(NotesTable.COLUMN_BODY, "body");
-            contentValues.put(NotesTable.COLUMN_CATEGORY, "category");
+            contentValues.put(NotesTable.COLUMN_CATEGORY, "test");
         }
 
         @Override
@@ -226,7 +225,7 @@ public class NotesContentProviderTests extends Tests<NotesContentProvider> {
         {
             contentValues.put(NotesTable.COLUMN_TITLE, "");
             contentValues.put(NotesTable.COLUMN_BODY, "body");
-            contentValues.put(NotesTable.COLUMN_CATEGORY, "category");
+            contentValues.put(NotesTable.COLUMN_CATEGORY, "test");
         }
 
         @Override
