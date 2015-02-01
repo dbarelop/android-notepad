@@ -31,5 +31,11 @@
     <string name="manage_categories">Manage categories</string>
     <string name="new_category_name">New category name</string>
     <string name="ok">OK</string>
+    <string name="tests">Tests</string>
+    <string name="title_cannot_be_empty">Title field cannot be empty</string>
+    <string name="title_activity_tests_list">TestsList</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="perform_test">Perform test</string>
 
 </resources>

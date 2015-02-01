@@ -33,6 +33,7 @@ public class NotesContentProvider extends ContentProvider implements Testable {
     private static final String BASE_PATH = "notes";
     public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + BASE_PATH);
     private static final UriMatcher sURIMatcher = new UriMatcher(UriMatcher.NO_MATCH);
+
     static {
         sURIMatcher.addURI(AUTHORITY, BASE_PATH, NOTES);
         sURIMatcher.addURI(AUTHORITY, BASE_PATH + "/#", NOTE_ID);
@@ -144,9 +145,10 @@ public class NotesContentProvider extends ContentProvider implements Testable {
 
     /**
      * Updates one or more rows in the content provider.
-     * @param uri The URI to query. This can potentially have a record ID if this is an update request for a specific record.
-     * @param values A set of column_name/value pairs to add to the database. This must not be null.
-     * @param selection An optional filter to match rows to update.
+     *
+     * @param uri           The URI to query. This can potentially have a record ID if this is an update request for a specific record.
+     * @param values        A set of column_name/value pairs to add to the database. This must not be null.
+     * @param selection     An optional filter to match rows to update.
      * @param selectionArgs You may include ?s in selection, which will be replaced by the values from selectionArgs, in order they appear in the selection.
      *                      The values will be bound as Strings.
      * @return The number of rows affected.
@@ -206,71 +208,4 @@ public class NotesContentProvider extends ContentProvider implements Testable {
         return new NotesContentProviderTests();
     }
 
-    /*private static final ContentValues[] insertTESTS_values = new ContentValues[4];
-    private static final ContentValues[] updateTESTS_values = new ContentValues[4];
-
-    static {
-        for (int i = 0; i < Math.max(insertTESTS_values.length, updateTESTS_values.length); i++) {
-            if (i < insertTESTS_values.length) insertTESTS_values[i] = new ContentValues();
-            if (i < updateTESTS_values.length) updateTESTS_values[i] = new ContentValues();
-        }
-        insertTESTS_values[0].put(NotesTable.COLUMN_TITLE, "tit");
-        insertTESTS_values[0].put(NotesTable.COLUMN_CATEGORY, "cat");
-        insertTESTS_values[0].put(NotesTable.COLUMN_BODY, "bod");
-        insertTESTS_values[1].put(NotesTable.COLUMN_TITLE, (String) null);
-        insertTESTS_values[1].put(NotesTable.COLUMN_CATEGORY, "cat");
-        insertTESTS_values[1].put(NotesTable.COLUMN_BODY, "bod");
-        insertTESTS_values[2].put(NotesTable.COLUMN_TITLE, "");
-        insertTESTS_values[2].put(NotesTable.COLUMN_CATEGORY, "cat");
-        insertTESTS_values[2].put(NotesTable.COLUMN_BODY, "bod");
-        insertTESTS_values[3].put(NotesTable.COLUMN_TITLE, "tit");
-        insertTESTS_values[3].put(NotesTable.COLUMN_CATEGORY, "cat");
-        insertTESTS_values[3].put(NotesTable.COLUMN_BODY, (String) null);
-        updateTESTS_values[0].put(NotesTable.COLUMN_TITLE, "tit");
-        updateTESTS_values[0].put(NotesTable.COLUMN_CATEGORY, "cat");
-        updateTESTS_values[0].put(NotesTable.COLUMN_BODY, "bod");
-        updateTESTS_values[1].put(NotesTable.COLUMN_TITLE, (String) null);
-        updateTESTS_values[1].put(NotesTable.COLUMN_CATEGORY, "cat");
-        updateTESTS_values[1].put(NotesTable.COLUMN_BODY, "bod");
-        updateTESTS_values[2].put(NotesTable.COLUMN_TITLE, "");
-        updateTESTS_values[2].put(NotesTable.COLUMN_CATEGORY, "cat");
-        updateTESTS_values[2].put(NotesTable.COLUMN_BODY, "bod");
-        updateTESTS_values[3].put(NotesTable.COLUMN_TITLE, "tit");
-        updateTESTS_values[3].put(NotesTable.COLUMN_CATEGORY, "cat");
-        updateTESTS_values[3].put(NotesTable.COLUMN_BODY, (String) null);
-    }
-
-    private static final Object[][] deleteTESTS = {
-            {CONTENT_URI + "/" + 0, null, null, null},
-            {CONTENT_URI + "/" + 1, null, null, null}};
-    private static final Object[][] insertTESTS = {
-            {CONTENT_URI, insertTESTS_values[0]},
-            {CONTENT_URI, insertTESTS_values[1]},
-            {CONTENT_URI, insertTESTS_values[2]},
-            {CONTENT_URI, insertTESTS_values[3]}};
-    private static final Object[][] updateTESTS = {
-            {Uri.parse(CONTENT_URI + "/" + 1), updateTESTS_values[0]},
-            {Uri.parse(CONTENT_URI + "/" + 1), updateTESTS_values[1]},
-            {Uri.parse(CONTENT_URI + "/" + 1), updateTESTS_values[2]},
-            {Uri.parse(CONTENT_URI + "/" + 1), updateTESTS_values[3]}};
-
-    @Override
-    public Object[][] getTests(Method m) throws NotTestableException {
-        Object[][] tests;
-        try {
-            Class<?> c = this.getClass();
-            if (m == c.getMethod("insert", Uri.class, ContentValues.class)) {
-                tests = insertTESTS;
-            } else if (m == c.getMethod("delete", Uri.class, String.class, String[].class)) {
-                tests = deleteTESTS;
-            } else if (m == c.getMethod("update", Uri.class, ContentValues.class, String.class, String[].class)) {
-                tests = updateTESTS;
-            } else {
-                throw new NotTestableException("Method " + m.getName() + " does not have any test implemented");
-            }
-            return tests;
-        } catch (NoSuchMethodException e) {
-            throw new NotTestableException("Class " + this.getClass().getName() + " does not include method " + m.getName());
-        }
-    }*/
 }

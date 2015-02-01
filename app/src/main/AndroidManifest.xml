@@ -21,16 +21,24 @@
         <activity
             android:name=".NoteEdit"
             android:label="@string/title_activity_note_edit"
-            android:parentActivityName=".NotesList"></activity>
-        <activity android:name=".email.JavaMailActivity"></activity>
+            android:parentActivityName=".NotesList" />
+        <activity android:name=".email.JavaMailActivity" />
 
         <provider
             android:name=".contentprovider.NotesContentProvider"
-            android:authorities="unizar.si.tp6.androidnotepad.contentprovider"></provider>
+            android:authorities="unizar.si.tp6.androidnotepad.contentprovider" />
 
         <activity
             android:name=".CategoriesList"
             android:label="@string/title_activity_categories_list"
+            android:parentActivityName=".NotesList">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="unizar.si.tp6.androidnotepad.NotesList" />
+        </activity>
+        <activity
+            android:name=".test.TestsList"
+            android:label="@string/title_activity_tests_list"
             android:parentActivityName=".NotesList">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

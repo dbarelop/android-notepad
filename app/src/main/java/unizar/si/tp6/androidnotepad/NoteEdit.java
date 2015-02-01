@@ -57,7 +57,7 @@ public class NoteEdit extends ActionBarActivity {
             public void onClick(View view) {
                 String title = mTitleText.getText().toString();
                 if (title.isEmpty()) {
-                    makeToast("Title field cannot be empty", Toast.LENGTH_LONG);
+                    makeToast(getString(R.string.title_cannot_be_empty), Toast.LENGTH_LONG);
                 } else {
                     setResult(RESULT_OK);
                     finish();

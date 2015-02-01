@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.LoaderManager;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -27,11 +28,11 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
-import android.widget.Toast;
 
 import unizar.si.tp6.androidnotepad.contentprovider.NotesContentProvider;
 import unizar.si.tp6.androidnotepad.db.NotesTable;
 import unizar.si.tp6.androidnotepad.note.Category;
+import unizar.si.tp6.androidnotepad.test.TestsList;
 
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
@@ -240,9 +241,10 @@ public class NavigationDrawerFragment extends Fragment implements LoaderManager.
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
-        if (item.getItemId() == R.id.insert_note) {
-            Toast.makeText(getActivity(), "Example action.", Toast.LENGTH_SHORT).show();
-            return true;
+        switch (item.getItemId()) {
+            case R.id.action_tests:
+                showTests();
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -277,6 +279,11 @@ public class NavigationDrawerFragment extends Fragment implements LoaderManager.
         } else {
             return null;
         }
+    }
+
+    private void showTests() {
+        Intent i = new Intent(getActivity().getApplicationContext(), TestsList.class);
+        startActivity(i);
     }
 
     /**
