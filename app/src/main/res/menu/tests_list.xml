@@ -2,6 +2,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="unizar.si.tp6.androidnotepad.test.TestsList">
+
+    <item
+        android:id="@+id/action_delete_test_notes"
+        android:title="@string/delete_test_notes"
+        android:orderInCategory="90"
+        app:showAsAction="never" />
+
     <item
         android:id="@+id/action_settings"
         android:title="@string/action_settings"

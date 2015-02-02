@@ -42,5 +42,6 @@
     <string name="test_not_success">Test not succesful</string>
     <string name="select_test">Select a test to perform</string>
     <string name="select_method">Select a method to test</string>
+    <string name="delete_test_notes">Delete test notes</string>
 
 </resources>

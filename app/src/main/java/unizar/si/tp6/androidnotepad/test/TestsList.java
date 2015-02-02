@@ -2,6 +2,7 @@ package unizar.si.tp6.androidnotepad.test;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -17,6 +18,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 import unizar.si.tp6.androidnotepad.R;
+import unizar.si.tp6.androidnotepad.contentprovider.NotesContentProvider;
 
 public class TestsList extends ActionBarActivity {
     private ListView listView;
@@ -62,7 +64,7 @@ public class TestsList extends ActionBarActivity {
                     List<? extends Test<? extends Testable>> testCollection = instance.getTests().getTests(testMethod);
                     showTestsForMethodDialog((List<Test<T>>) testCollection, instance);
                 } catch (NotTestableException e) {
-                    Toast.makeText(getBaseContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                 }
             }
         };
@@ -126,8 +128,15 @@ public class TestsList extends ActionBarActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-
+            case R.id.action_delete_test_notes:
+                deleteTestNotes();
+                return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void deleteTestNotes() {
+        Uri uri = Uri.parse(NotesContentProvider.CONTENT_URI + "/CATEGORY/test");
+        getContentResolver().delete(uri, null, null);
     }
 }

@@ -149,6 +149,21 @@ public class NotesContentProvider extends ContentProvider implements Testable {
                     rowsDeleted = db.delete(NotesTable.TABLE_NOTES, NotesTable.COLUMN_ID + " = " + id + " and " + selection, selectionArgs);
                 }
                 break;
+            case NOTES_CATEGORY:
+                String category = uri.getLastPathSegment();
+                if (TextUtils.isEmpty(selection)) {
+                    rowsDeleted = db.delete(NotesTable.TABLE_NOTES, NotesTable.COLUMN_CATEGORY + " = ?", new String[]{category});
+                } else {
+                    String[] selectionArgs_ = selectionArgs == null ? new String[]{category} : new String[selectionArgs.length + 1];
+                    if (selectionArgs != null) {
+                        selectionArgs_[0] = category;
+                        for (int i = 0; i < selectionArgs.length; i++) {
+                            selectionArgs_[i + 1] = selectionArgs[i];
+                        }
+                    }
+                    rowsDeleted = db.delete(NotesTable.TABLE_NOTES, NotesTable.COLUMN_CATEGORY + " = ? and " + selection, selectionArgs_);
+                }
+                break;
             default:
                 throw new IllegalArgumentException("Unknown URI: " + uri);
         }
