@@ -30,9 +30,15 @@ public class NotesContentProviderTestCollection extends TestCollection<NotesCont
             contentValues.put(NotesTable.COLUMN_CATEGORY, "test");
         }
 
+        private long time = 0;
+
         @Override
         public void performTest(NotesContentProvider instance) {
+            time = 0;
+            long t0 = System.currentTimeMillis();
             instance.insert(uri, contentValues);
+            long t1 = System.currentTimeMillis();
+            time = t1 - t0;
         }
 
         @Override
@@ -43,6 +49,11 @@ public class NotesContentProviderTestCollection extends TestCollection<NotesCont
         @Override
         public String getDescription() {
             return DESCRIPTION;
+        }
+
+        @Override
+        public long getExecutionTime() {
+            return time;
         }
     };
     private final static Test<NotesContentProvider> insert2NullcontentValuesParameterTest = new Test<NotesContentProvider>() {
@@ -51,9 +62,15 @@ public class NotesContentProviderTestCollection extends TestCollection<NotesCont
         private final Uri uri = NotesContentProvider.CONTENT_URI;
         private final ContentValues contentValues = null;
 
+        private long time = 0;
+
         @Override
         public void performTest(NotesContentProvider instance) {
+            time = 0;
+            long t0 = System.currentTimeMillis();
             instance.insert(uri, contentValues);
+            long t1 = System.currentTimeMillis();
+            time = t1 - t0;
         }
 
         @Override
@@ -64,6 +81,11 @@ public class NotesContentProviderTestCollection extends TestCollection<NotesCont
         @Override
         public String getDescription() {
             return DESCRIPTION;
+        }
+
+        @Override
+        public long getExecutionTime() {
+            return time;
         }
     };
     private final static Test<NotesContentProvider> insert2NullTitleTest = new Test<NotesContentProvider>() {
@@ -78,9 +100,15 @@ public class NotesContentProviderTestCollection extends TestCollection<NotesCont
             contentValues.put(NotesTable.COLUMN_CATEGORY, "test");
         }
 
+        private long time = 0;
+
         @Override
         public void performTest(NotesContentProvider instance) {
+            time = 0;
+            long t0 = System.currentTimeMillis();
             instance.insert(uri, contentValues);
+            long t1 = System.currentTimeMillis();
+            time = t1 - t0;
         }
 
         @Override
@@ -91,6 +119,11 @@ public class NotesContentProviderTestCollection extends TestCollection<NotesCont
         @Override
         public String getDescription() {
             return DESCRIPTION;
+        }
+
+        @Override
+        public long getExecutionTime() {
+            return time;
         }
     };
     private final static Test<NotesContentProvider> insert2NullCategoryTest = new Test<NotesContentProvider>() {
@@ -105,9 +138,15 @@ public class NotesContentProviderTestCollection extends TestCollection<NotesCont
             contentValues.putNull(NotesTable.COLUMN_CATEGORY);
         }
 
+        private long time = 0;
+
         @Override
         public void performTest(NotesContentProvider instance) {
+            time = 0;
+            long t0 = System.currentTimeMillis();
             instance.insert(uri, contentValues);
+            long t1 = System.currentTimeMillis();
+            time = t1 - t0;
         }
 
         @Override
@@ -118,6 +157,11 @@ public class NotesContentProviderTestCollection extends TestCollection<NotesCont
         @Override
         public String getDescription() {
             return DESCRIPTION;
+        }
+
+        @Override
+        public long getExecutionTime() {
+            return time;
         }
     };
     private final static Test<NotesContentProvider> insert2EmptyTitleTest = new Test<NotesContentProvider>() {
@@ -132,9 +176,15 @@ public class NotesContentProviderTestCollection extends TestCollection<NotesCont
             contentValues.put(NotesTable.COLUMN_CATEGORY, "test");
         }
 
+        private long time = 0;
+
         @Override
         public void performTest(NotesContentProvider instance) {
+            time = 0;
+            long t0 = System.currentTimeMillis();
             instance.insert(uri, contentValues);
+            long t1 = System.currentTimeMillis();
+            time = t1 - t0;
         }
 
         @Override
@@ -145,6 +195,11 @@ public class NotesContentProviderTestCollection extends TestCollection<NotesCont
         @Override
         public String getDescription() {
             return DESCRIPTION;
+        }
+
+        @Override
+        public long getExecutionTime() {
+            return time;
         }
     };
     private final static Test<NotesContentProvider> insert2EmptyCategoryTest = new Test<NotesContentProvider>() {
@@ -159,9 +214,15 @@ public class NotesContentProviderTestCollection extends TestCollection<NotesCont
             contentValues.put(NotesTable.COLUMN_CATEGORY, "");
         }
 
+        private long time = 0;
+
         @Override
         public void performTest(NotesContentProvider instance) {
+            time = 0;
+            long t0 = System.currentTimeMillis();
             instance.insert(uri, contentValues);
+            long t1 = System.currentTimeMillis();
+            time = t1 - t0;
         }
 
         @Override
@@ -173,10 +234,15 @@ public class NotesContentProviderTestCollection extends TestCollection<NotesCont
         public String getDescription() {
             return DESCRIPTION;
         }
+
+        @Override
+        public long getExecutionTime() {
+            return time;
+        }
     };
     private final static Test<NotesContentProvider> insert2Perform1000Insertions = new Test<NotesContentProvider>() {
-        private final String TITLE = "Insert 1000 notes";
-        private final String DESCRIPTION = "Inserts 1000 notes";
+        private final String TITLE = "Insert 10000 notes";
+        private final String DESCRIPTION = "Inserts 10000 notes";
         private final Uri uri = NotesContentProvider.CONTENT_URI;
         private final ContentValues contentValues = new ContentValues();
         {
@@ -184,13 +250,18 @@ public class NotesContentProviderTestCollection extends TestCollection<NotesCont
             contentValues.put(NotesTable.COLUMN_CATEGORY, "test");
         }
 
-        private int N = 1000;
+        private int N = 10000;
+        private long time = 0;
 
         @Override
         public void performTest(NotesContentProvider instance) {
+            time = 0;
             for (int i = 0; i < N; i++) {
                 contentValues.put(NotesTable.COLUMN_TITLE, "title" + i);
+                long t0 = System.currentTimeMillis();
                 instance.insert(uri, contentValues);
+                long t1 = System.currentTimeMillis();
+                time += t1 - t0;
             }
         }
 
@@ -202,6 +273,11 @@ public class NotesContentProviderTestCollection extends TestCollection<NotesCont
         @Override
         public String getDescription() {
             return DESCRIPTION;
+        }
+
+        @Override
+        public long getExecutionTime() {
+            return time;
         }
     };
     private final static Test<NotesContentProvider> update4NullTitleTest = new Test<NotesContentProvider>() {
@@ -218,9 +294,15 @@ public class NotesContentProviderTestCollection extends TestCollection<NotesCont
             contentValues.put(NotesTable.COLUMN_CATEGORY, "test");
         }
 
+        private long time = 0;
+
         @Override
         public void performTest(NotesContentProvider instance) {
+            time = 0;
+            long t0 = System.currentTimeMillis();
             instance.update(uri, contentValues, selection, selectionArgs);
+            long t1 = System.currentTimeMillis();
+            time = t1 - t0;
         }
 
         @Override
@@ -231,6 +313,11 @@ public class NotesContentProviderTestCollection extends TestCollection<NotesCont
         @Override
         public String getDescription() {
             return DESCRIPTION;
+        }
+
+        @Override
+        public long getExecutionTime() {
+            return time;
         }
     };
     private final static Test<NotesContentProvider> update4NullCategoryTest = new Test<NotesContentProvider>() {
@@ -247,9 +334,15 @@ public class NotesContentProviderTestCollection extends TestCollection<NotesCont
             contentValues.putNull(NotesTable.COLUMN_CATEGORY);
         }
 
+        private long time = 0;
+
         @Override
         public void performTest(NotesContentProvider instance) {
+            time = 0;
+            long t0 = System.currentTimeMillis();
             instance.update(uri, contentValues, selection, selectionArgs);
+            long t1 = System.currentTimeMillis();
+            time = t1 - t0;
         }
 
         @Override
@@ -260,6 +353,11 @@ public class NotesContentProviderTestCollection extends TestCollection<NotesCont
         @Override
         public String getDescription() {
             return DESCRIPTION;
+        }
+
+        @Override
+        public long getExecutionTime() {
+            return time;
         }
     };
     private final static Test<NotesContentProvider> update4EmptyTitleTest = new Test<NotesContentProvider>() {
@@ -276,9 +374,15 @@ public class NotesContentProviderTestCollection extends TestCollection<NotesCont
             contentValues.put(NotesTable.COLUMN_CATEGORY, "test");
         }
 
+        private long time = 0;
+
         @Override
         public void performTest(NotesContentProvider instance) {
+            time = 0;
+            long t0 = System.currentTimeMillis();
             instance.update(uri, contentValues, selection, selectionArgs);
+            long t1 = System.currentTimeMillis();
+            time = t1 - t0;
         }
 
         @Override
@@ -289,6 +393,11 @@ public class NotesContentProviderTestCollection extends TestCollection<NotesCont
         @Override
         public String getDescription() {
             return DESCRIPTION;
+        }
+
+        @Override
+        public long getExecutionTime() {
+            return time;
         }
     };
     private final static Test<NotesContentProvider> update4EmptyCategoryTest = new Test<NotesContentProvider>() {
@@ -305,9 +414,15 @@ public class NotesContentProviderTestCollection extends TestCollection<NotesCont
             contentValues.put(NotesTable.COLUMN_CATEGORY, "");
         }
 
+        private long time = 0;
+
         @Override
         public void performTest(NotesContentProvider instance) {
+            time = 0;
+            long t0 = System.currentTimeMillis();
             instance.update(uri, contentValues, selection, selectionArgs);
+            long t1 = System.currentTimeMillis();
+            time = t1 - t0;
         }
 
         @Override
@@ -318,6 +433,11 @@ public class NotesContentProviderTestCollection extends TestCollection<NotesCont
         @Override
         public String getDescription() {
             return DESCRIPTION;
+        }
+
+        @Override
+        public long getExecutionTime() {
+            return time;
         }
     };
 

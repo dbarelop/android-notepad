@@ -15,6 +15,8 @@ public abstract class Test<C extends Testable> {
 
     public abstract String getDescription();
 
+    public abstract long getExecutionTime();
+
     @Override
     public String toString() {
         return getTitle();

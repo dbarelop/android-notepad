@@ -100,6 +100,7 @@ public class TestsList extends ActionBarActivity {
                 try {
                     test.performTest(instance);
                     builder.setTitle(getString(R.string.test_succesful));
+                    builder.setMessage("Test run succesfully in " + test.getExecutionTime() + " ms");
                 } catch (Exception e) {
                     builder.setTitle(getString(R.string.test_not_success));
                     builder.setMessage(e.getMessage());
