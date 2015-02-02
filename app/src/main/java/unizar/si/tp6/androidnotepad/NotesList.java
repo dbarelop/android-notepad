@@ -84,8 +84,6 @@ public class NotesList extends ActionBarActivity implements NavigationDrawerFrag
                 AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
                 Uri uri = Uri.parse(NotesContentProvider.CONTENT_URI + "/" + info.id);
                 getContentResolver().delete(uri, null, null);
-                getLoaderManager().restartLoader(0, null, this);
-                mNavigationDrawerFragment.getLoaderManager().restartLoader(0, null, mNavigationDrawerFragment);
                 return true;
             case CONTEXT_MENU_EMAIL_ID:
                 info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
@@ -168,24 +166,13 @@ public class NotesList extends ActionBarActivity implements NavigationDrawerFrag
     private void deleteAllNotes() {
         Uri uri = NotesContentProvider.CONTENT_URI;
         getContentResolver().delete(uri, null, null);
-        getLoaderManager().restartLoader(0, null, this);
-        mNavigationDrawerFragment.getLoaderManager().restartLoader(0, null, mNavigationDrawerFragment);
     }
 
     private void editNote(long id) {
         Intent i = new Intent(this, NoteEdit.class);
         Uri notesUri = Uri.parse(NotesContentProvider.CONTENT_URI + "/" + id);
         i.putExtra(NotesContentProvider.CONTENT_ITEM_TYPE, notesUri);
-        startActivityForResult(i, 1);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case 1:
-                mNavigationDrawerFragment.getLoaderManager().restartLoader(0, null, mNavigationDrawerFragment);
-                break;
-        }
+        startActivity(i);
     }
 
     @Override

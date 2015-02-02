@@ -75,7 +75,6 @@ public class CategoriesList extends ActionBarActivity implements LoaderManager.L
                     ContentValues values = new ContentValues();
                     values.put(NotesTable.COLUMN_CATEGORY, newCategory);
                     getContentResolver().update(uri, values, null, null);
-                    getLoaderManager().restartLoader(0, null, callback);
                 }
             }
         };
@@ -125,7 +124,6 @@ public class CategoriesList extends ActionBarActivity implements LoaderManager.L
                 ContentValues values = new ContentValues();
                 values.putNull(NotesTable.COLUMN_CATEGORY);
                 getContentResolver().update(uri, values, null, null);
-                getLoaderManager().restartLoader(0, null, this);
                 return true;
         }
         return super.onContextItemSelected(item);

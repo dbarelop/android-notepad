@@ -87,9 +87,7 @@ public class NotesContentProvider extends ContentProvider implements Testable {
         }
         SQLiteDatabase db = database.getReadableDatabase();
         Cursor cursor = queryBuilder.query(db, projection, selection, selectionArgs, groupBy, null, sortOrder);
-        if (getContext() != null) {
-            cursor.setNotificationUri(getContext().getContentResolver(), uri);
-        }
+        cursor.setNotificationUri(getContext().getContentResolver(), uri);
         return cursor;
     }
 
@@ -119,6 +117,8 @@ public class NotesContentProvider extends ContentProvider implements Testable {
         }
         if (getContext() != null) {
             getContext().getContentResolver().notifyChange(uri, null);
+            getContext().getContentResolver().notifyChange(CONTENT_URI, null);
+            getContext().getContentResolver().notifyChange(Uri.parse(CONTENT_URI + "/CATEGORIES"), null);
         }
         return Uri.parse(BASE_PATH + "/" + id);
     }
@@ -169,6 +169,8 @@ public class NotesContentProvider extends ContentProvider implements Testable {
         }
         if (getContext() != null) {
             getContext().getContentResolver().notifyChange(uri, null);
+            getContext().getContentResolver().notifyChange(CONTENT_URI, null);
+            getContext().getContentResolver().notifyChange(Uri.parse(CONTENT_URI + "/CATEGORIES"), null);
         }
         return rowsDeleted;
     }
@@ -220,6 +222,8 @@ public class NotesContentProvider extends ContentProvider implements Testable {
         }
         if (getContext() != null) {
             getContext().getContentResolver().notifyChange(uri, null);
+            getContext().getContentResolver().notifyChange(CONTENT_URI, null);
+            getContext().getContentResolver().notifyChange(Uri.parse(CONTENT_URI + "/CATEGORIES"), null);
         }
         return rowsUpdated;
     }
