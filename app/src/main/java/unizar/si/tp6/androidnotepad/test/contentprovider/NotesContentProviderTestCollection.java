@@ -12,12 +12,60 @@ import java.util.Map;
 import unizar.si.tp6.androidnotepad.contentprovider.NotesContentProvider;
 import unizar.si.tp6.androidnotepad.db.NotesTable;
 import unizar.si.tp6.androidnotepad.test.Test;
-import unizar.si.tp6.androidnotepad.test.Tests;
+import unizar.si.tp6.androidnotepad.test.TestCollection;
 
 /**
  * Created by dbarelop on 1/2/15.
  */
-public class NotesContentProviderTests extends Tests<NotesContentProvider> {
+public class NotesContentProviderTestCollection extends TestCollection<NotesContentProvider> {
+    private final static Test<NotesContentProvider> insert2NulluriParameterTest = new Test<NotesContentProvider>() {
+        private final String TITLE = "Insert NULL uri parameter";
+        private final String DESCRIPTION = "Calls insert(Uri uri, ContentValues contentValues) with uri = null";
+        private final Uri uri = null;
+        private final ContentValues contentValues = new ContentValues();
+
+        {
+            contentValues.putNull(NotesTable.COLUMN_TITLE);
+            contentValues.put(NotesTable.COLUMN_BODY, "body");
+            contentValues.put(NotesTable.COLUMN_CATEGORY, "test");
+        }
+
+        @Override
+        public void performTest(NotesContentProvider instance) {
+            instance.insert(uri, contentValues);
+        }
+
+        @Override
+        public String getTitle() {
+            return TITLE;
+        }
+
+        @Override
+        public String getDescription() {
+            return DESCRIPTION;
+        }
+    };
+    private final static Test<NotesContentProvider> insert2NullcontentValuesParameterTest = new Test<NotesContentProvider>() {
+        private final String TITLE = "Insert NULL contentValues parameter";
+        private final String DESCRIPTION = "Calls insert(Uri uri, ContentValues contentValues) with contentValues = null";
+        private final Uri uri = NotesContentProvider.CONTENT_URI;
+        private final ContentValues contentValues = null;
+
+        @Override
+        public void performTest(NotesContentProvider instance) {
+            instance.insert(uri, contentValues);
+        }
+
+        @Override
+        public String getTitle() {
+            return TITLE;
+        }
+
+        @Override
+        public String getDescription() {
+            return DESCRIPTION;
+        }
+    };
     private final static Test<NotesContentProvider> insert2NullTitleTest = new Test<NotesContentProvider>() {
         private final String TITLE = "Insert NULL title";
         private final String DESCRIPTION = "Inserts a note with NULL title";
@@ -280,6 +328,8 @@ public class NotesContentProviderTests extends Tests<NotesContentProvider> {
             List<Test<NotesContentProvider>> c = new ArrayList<>();
             try {
                 if (m.equals(NotesContentProvider.class.getDeclaredMethod("insert", Uri.class, ContentValues.class))) {
+                    c.add(insert2NulluriParameterTest);
+                    c.add(insert2NullcontentValuesParameterTest);
                     c.add(insert2NullTitleTest);
                     c.add(insert2NullCategoryTest);
                     c.add(insert2EmptyTitleTest);

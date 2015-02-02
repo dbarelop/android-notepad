@@ -18,7 +18,7 @@ public interface Testable {
      * @return A Tests class containing all the programmed tests for the class that implements
      * this interface
      */
-    public Tests<?> getTests();
+    public TestCollection<?> getTests();
 
     public Testable getInstance(Context context);
 }

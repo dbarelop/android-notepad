@@ -7,10 +7,10 @@ import java.util.Map;
 /**
  * Created by dbarelop on 1/2/15.
  */
-public abstract class Tests<T extends Testable> {
+public abstract class TestCollection<T extends Testable> {
     private Map<Method, List<Test<T>>> testsCollection;
 
-    public Tests() {
+    public TestCollection() {
         testsCollection = initializeTests();
     }
 

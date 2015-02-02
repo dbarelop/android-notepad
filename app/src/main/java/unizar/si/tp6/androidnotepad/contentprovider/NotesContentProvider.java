@@ -16,9 +16,9 @@ import java.util.HashSet;
 
 import unizar.si.tp6.androidnotepad.db.NotesDatabaseHelper;
 import unizar.si.tp6.androidnotepad.db.NotesTable;
+import unizar.si.tp6.androidnotepad.test.TestCollection;
 import unizar.si.tp6.androidnotepad.test.Testable;
-import unizar.si.tp6.androidnotepad.test.Tests;
-import unizar.si.tp6.androidnotepad.test.contentprovider.NotesContentProviderTests;
+import unizar.si.tp6.androidnotepad.test.contentprovider.NotesContentProviderTestCollection;
 
 /**
  * Created by dbarelop on 05/01/15.
@@ -240,8 +240,8 @@ public class NotesContentProvider extends ContentProvider implements Testable {
     /*------------------------------------------ TESTS -------------------------------------------*/
 
     @Override
-    public Tests<NotesContentProvider> getTests() {
-        return new NotesContentProviderTests();
+    public TestCollection<NotesContentProvider> getTests() {
+        return new NotesContentProviderTestCollection();
     }
 
     @Override
