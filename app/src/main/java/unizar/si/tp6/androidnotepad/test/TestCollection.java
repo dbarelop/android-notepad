@@ -14,6 +14,11 @@ public abstract class TestCollection<T extends Testable> {
         testsCollection = initializeTests();
     }
 
+    /**
+     * Initializes all the tests
+     *
+     * @return A map containing all the tests
+     */
     protected abstract Map<Method, List<Test<T>>> initializeTests();
 
     /**

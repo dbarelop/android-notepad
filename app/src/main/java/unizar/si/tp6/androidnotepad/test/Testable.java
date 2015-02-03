@@ -20,5 +20,11 @@ public interface Testable {
      */
     public TestCollection<?> getTests();
 
+    /**
+     * Returns an instance of the class, preconfigured to be used by a test
+     *
+     * @param context The application context
+     * @return An instance of the class, preconfigured to be used by a test
+     */
     public Testable getInstance(Context context);
 }
